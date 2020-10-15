@@ -1,4 +1,3 @@
-import IOManager as io  #To get informations from the screen
 import random as rand   #For random treat position
 
 class Snek:
@@ -10,15 +9,12 @@ class Snek:
     growing : True if the snake should grow on its next call to move().
     """
 
-    def __init__(self):
+    def __init__(self, initialLength, initialPos):
         """Constructor.
         
-        Starting snake position is at the center of the screen.
+        initialLength : Interger, number of sections the snake has at the start.
+        initialPos : [x,y] array, initial position of the snake's head.
         """
-
-        initialLength = 5
-        initialPos = [int(io.ecran.largeur/2) + io.ecran.leftBoundary - int(initialLength/2),\
-                        int(io.ecran.hauteur/2) + io.ecran.topBoundary]
         
         self.position=[]
         for x in range(initialLength):
@@ -27,11 +23,11 @@ class Snek:
         self.dead = False
         self.growing = False
 
-    def update(self, direction):
+    def update(self, direction, gameBoundaries):
         """Updates the snake by making it move and checks its life state."""
 
         self.move(direction)
-        self.checkState()
+        self.checkState(gameBoundaries)
 
     def move(self, direction):
         """Updates the current position of the snake base on its direction.
@@ -69,14 +65,20 @@ class Snek:
             self.growing = False
         else:
             self.position.pop(-1)
-
     
-    def checkState(self):
-        """Changes the snake's state to dead=True if it has encountered an obstacle or itself."""
+    def checkState(self, gameBoundaries):
+        """Changes the snake's state to dead=True if it has encountered an obstacle or itself.
+        
+        gameBoundaries : [[xleft,ytop] , [xright, ybottom]] coordinates of the game board.
+        """
 
         if self.position[0] in self.position[1:]:
+            #If snake bites itself.
             self.dead = True
-        if not io.ecran.withinBoundaries(self.position[0][0], self.position[0][1]):
+
+        if self.position[0][0]<gameBoundaries[0][0] or self.position[0][0]>=gameBoundaries[1][0]\
+            or self.position[0][1]<gameBoundaries[0][1] or self.position[0][1]>=gameBoundaries[1][1]:
+            #If snake is not within game boundaries.
             self.dead = True
 
     def grow(self):
@@ -91,32 +93,41 @@ class Treat:
     """The treats appearing randomly on the game board.
     
     position : an array [x,y] giving the position of the treat.
+    dead : boolean, indicates if the snake's head is on the treat.
     """
 
-    def __init__(self):
-        """Constructor."""
+    def __init__(self, gameBoundaries, snakePosition):
+        """Constructor.
 
-        self.position = [io.ecran.leftBoundary + int((io.ecran.largeur)*rand.random()),\
-                        io.ecran.topBoundary + int((io.ecran.hauteur)*rand.random())]
+        gameBoundaries : [[xleft,ytop] , [xright, ybottom]] coordinates of the game board.
+        snakePosition: An array of [x,y] coordinates representing each section of the snake.
+        """
+
+        self.reset(gameBoundaries, snakePosition)
+        self.dead = False
     
-    def reset(self, snakePos):
+    def reset(self, gameBoundaries, snakePos):
         """Sets a new position for the treat.
         
-        The new treat can't be on the snake."""
+        The new treat can't be on the snake.
+        gameBoundaries : [[xleft,ytop] , [xright, ybottom]] coordinates of the game board.
+        snakePosition: An array of [x,y] coordinates representing each section of the snake.
+        """
 
         while True:
-            self.position = [io.ecran.leftBoundary + int((io.ecran.largeur)*rand.random()),\
-                            io.ecran.topBoundary + int((io.ecran.hauteur)*rand.random())]
+            randomX = abs(int((gameBoundaries[1][0] - gameBoundaries[0][0])*rand.random()) + gameBoundaries[0][0])
+            randomY = abs(int((gameBoundaries[1][1] - gameBoundaries[0][1])*rand.random()) + gameBoundaries[0][1])
+            self.position = [randomX, randomY]
             if self.position not in snakePos:
                 break
 
     def update(self, snakePos):
-        """Returns 'dead' if the snake's head is on the treat. 'alive' else.
+        """Changes dead to True if the snake's head is on the treat. False else.
         
-        snakePos : an array of [x,y] coordinates for each section of the snake."""
+        snakePos : an array of [x,y] coordinates for each section of the snake.
+        """
 
         if self.position == snakePos[0]:
-            self.reset(snakePos)
-            return 'dead'
+            self.dead = True
         else:
-            return 'alive'
+            self.dead = False

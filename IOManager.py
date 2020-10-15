@@ -1,6 +1,5 @@
 import msvcrt   #For keyboard input
-import time #For Timeout
-import os   #For system('cls')
+import os   #For system('cls') to clear terminal
 
 class InputManager:
     """Handles the keyboard inputs.
@@ -8,7 +7,7 @@ class InputManager:
     keyCorrespondace : dict object. Gives the correspondance between the keypressed and its meaning.
     """
 
-    keyCorrespondance = {   #
+    keyCorrespondance = {
         'H':'u',
         'P':'d',
         'K':'l',
@@ -56,31 +55,32 @@ class InputManager:
 class OutputManager:
     """Handles display on screen.
     
-    state : Tells if the manager should display the startingScreen, the game, or the game over screen.
-    top/bottom/left/rightBoundary : Position of the boundaries of the game board.
-    largeur/hauteur : derivated from the boundaries.
+    state : String, tells if the manager should display the startingScreen, the game, or the game over screen.
+    top/bottom/left/rightBoundary : Integers, position of the boundaries of the game board.
+    largeur/hauteur : Integers, derivated from the boundaries.
     """
 
-    def __init__(self):
-        """Constructor."""
+    def __init__(self, gameBoundaries):
+        """Constructor.
+        
+        gameBoundaries : [[xleft,ytop] , [xright, ybottom]] coordinates of the game board.
+        """
 
         self.state = "startingScreen"
 
-        self.topBoundary = 0
-        self.bottomBoundary = 10
-        self.leftBoundary = 0
-        self.rightBoundary = 10
+        self.topBoundary = gameBoundaries[0][1]
+        self.bottomBoundary = gameBoundaries[1][1]
+        self.leftBoundary = gameBoundaries[0][0]
+        self.rightBoundary = gameBoundaries[1][0]
 
         self.largeur = abs(self.rightBoundary-self.leftBoundary)
         self.hauteur = abs(self.bottomBoundary-self.topBoundary)
 
-    def withinBoundaries(self, x, y):
-        """Returns True if [x, y] is within the frame's boundaries. False else."""
-
-        return y>=self.topBoundary and y<self.bottomBoundary and x>=self.leftBoundary and x<self.rightBoundary
-
     def changeState(self, newState):
-        """Changes the state of the manager with newState."""
+        """Changes the state of the manager with newState.
+        
+        newState : String, within 'startingScreen', 'gameOver', 'game'
+        """
 
         self.state=newState
 
@@ -89,7 +89,7 @@ class OutputManager:
         
         snakePos : An array of [x,y] coordinates for each section of the snake.
         treatPos : [x,y] array for the position of the treat.
-        score : Player's score.
+        score : Integer, player's score.
         """
 
         #Clear console
@@ -130,10 +130,7 @@ class OutputManager:
 
         elif self.state == "gameOver":
             #Display the game over screen
-            
+
             print(f"\n{20*' '}GAME OVER")
             print(f"{20*' '}Score : {score}")
             print(f"\n{13*' '}Press Enter to start again.\n{18*' '}or Esc to quit.")
-
-
-ecran = OutputManager()
