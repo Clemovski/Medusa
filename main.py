@@ -7,13 +7,13 @@ manette = io.InputManager()
 score = 0
 
 #Initializing game screen
-gameBoundaries = [[0, 0] , [10, 10]]    #[[xleft,ytop] , [xright, ybottom]]
+gameBoundaries = [[5, 1] , [15, 11]]    #[[xleft,ytop] , [xright, ybottom]]
 ecran = io.OutputManager(gameBoundaries)
 
 #Initializing Snek
 snakeStartingLength = 5
-snakeStartingPoint = [abs(gameBoundaries[0][0] + int((gameBoundaries[1][0]-gameBoundaries[0][0])/2)),\
-                        abs(gameBoundaries[0][1] + int((gameBoundaries[1][1]-gameBoundaries[0][1])/2))]  #Center of the screen.
+snakeStartingPoint = [abs(int((gameBoundaries[1][0]-gameBoundaries[0][0])/2)),\
+                        abs(int((gameBoundaries[1][1]-gameBoundaries[0][1])/2))]  #Center of the screen.
 snek = go.Snek(snakeStartingLength, snakeStartingPoint)
 
 #Initializing Treat

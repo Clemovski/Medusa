@@ -76,8 +76,8 @@ class Snek:
             #If snake bites itself.
             self.dead = True
 
-        if self.position[0][0]<gameBoundaries[0][0] or self.position[0][0]>=gameBoundaries[1][0]\
-            or self.position[0][1]<gameBoundaries[0][1] or self.position[0][1]>=gameBoundaries[1][1]:
+        if self.position[0][0]<0 or self.position[0][0]>=abs(gameBoundaries[1][0] - gameBoundaries[0][0])\
+            or self.position[0][1]<0 or self.position[0][1]>=abs(gameBoundaries[1][1] - gameBoundaries[0][1]):
             #If snake is not within game boundaries.
             self.dead = True
 
@@ -115,8 +115,8 @@ class Treat:
         """
 
         while True:
-            randomX = abs(int((gameBoundaries[1][0] - gameBoundaries[0][0])*rand.random()) + gameBoundaries[0][0])
-            randomY = abs(int((gameBoundaries[1][1] - gameBoundaries[0][1])*rand.random()) + gameBoundaries[0][1])
+            randomX = abs(int((gameBoundaries[1][0] - gameBoundaries[0][0])*rand.random()))
+            randomY = abs(int((gameBoundaries[1][1] - gameBoundaries[0][1])*rand.random()))
             self.position = [randomX, randomY]
             if self.position not in snakePos:
                 break

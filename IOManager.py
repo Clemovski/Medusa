@@ -97,10 +97,12 @@ class OutputManager:
 
         if self.state == 'game':
             #Display the game board and the game elements.
+            leftPadding = 2*self.leftBoundary*" "
+            print(self.topBoundary*'\n', end='')
 
-            print((2*self.largeur+3)*'=')
-            for line in range((self.hauteur)):  #Pour chaque ligne de l'écran
-                print("|", end=' ')
+            print(f"{leftPadding}{(2*self.largeur+3)*'='}")
+            for line in range(self.hauteur):  #Pour chaque ligne de l'écran
+                print(f"{leftPadding}|", end=' ')
                 for x in range((self.largeur)):
                     if [x,line] in snakePos:
                         print("#", end=' ')
@@ -110,17 +112,17 @@ class OutputManager:
                         print(" ", end=' ')
                 print("|")
 
-            print((2*self.largeur+3)*'=')
+            print(f"{leftPadding}{(2*self.largeur+3)*'='}")
 
         elif self.state == "startingScreen":
             #Display the starting screen
 
             print("""
-##  ##  ####    ####    ##  ##  ####-<  ####
-######  #        # #    ##  ##  ##      #  #
-##  ##  ####     # #    ##  ##   ##     ####
-##  ##  #        # #    ##  ##    ##    #  #
-##  ##  ####    ####    ######  ####    #  #
+   ##  ##  ####    ####    ##  ##  ####-<  ####
+   ######  #        # #    ##  ##  ##      #  #
+   ##  ##  ####     # #    ##  ##   ##     ####
+   ##  ##  #        # #    ##  ##    ##    #  #
+   ##  ##  ####    ####    ######  ####    #  #
 
 (A Snake game in Python with the help of Anaconda)
                 
@@ -131,6 +133,7 @@ class OutputManager:
         elif self.state == "gameOver":
             #Display the game over screen
 
-            print(f"\n{20*' '}GAME OVER")
-            print(f"{20*' '}Score : {score}")
-            print(f"\n{13*' '}Press Enter to start again.\n{18*' '}or Esc to quit.")
+            print(2*'\n')
+            print(f"{16*' '}GAME OVER")
+            print(f"{16*' '}Score : {score}")
+            print(f"\n{8*' '}Press Enter to start again.\n{13*' '}or Esc to quit.")
