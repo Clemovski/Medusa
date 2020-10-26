@@ -1,5 +1,3 @@
-import random as rand   #For random treat position
-
 class Snek:
     """The snake controlled by the player.
     
@@ -23,11 +21,11 @@ class Snek:
         self.dead = False
         self.growing = False
 
-    def update(self, direction, gameBoundaries):
+    def update(self, direction, gameBoard):
         """Updates the snake by making it move and checks its life state."""
 
         self.move(direction)
-        self.checkState(gameBoundaries)
+        self.checkState(gameBoard)
 
     def move(self, direction):
         """Updates the current position of the snake base on its direction.
@@ -66,7 +64,7 @@ class Snek:
         else:
             self.position.pop(-1)
     
-    def checkState(self, gameBoundaries):
+    def checkState(self, gameBoard):
         """Changes the snake's state to dead=True if it has encountered an obstacle or itself.
         
         gameBoundaries : [[xleft,ytop] , [xright, ybottom]] coordinates of the game board.
@@ -76,8 +74,7 @@ class Snek:
             #If snake bites itself.
             self.dead = True
 
-        if self.position[0][0]<0 or self.position[0][0]>=abs(gameBoundaries[1][0] - gameBoundaries[0][0])\
-            or self.position[0][1]<0 or self.position[0][1]>=abs(gameBoundaries[1][1] - gameBoundaries[0][1]):
+        if gameBoard.outOfBoundaries(self.position[0][0], self.position[0][1]):
             #If snake is not within game boundaries.
             self.dead = True
 
@@ -96,17 +93,17 @@ class Treat:
     dead : boolean, indicates if the snake's head is on the treat.
     """
 
-    def __init__(self, gameBoundaries, snakePosition):
+    def __init__(self, gameBoard, snakePosition):
         """Constructor.
 
         gameBoundaries : [[xleft,ytop] , [xright, ybottom]] coordinates of the game board.
         snakePosition: An array of [x,y] coordinates representing each section of the snake.
         """
 
-        self.reset(gameBoundaries, snakePosition)
+        self.reset(gameBoard, snakePosition)
         self.dead = False
     
-    def reset(self, gameBoundaries, snakePos):
+    def reset(self, gameBoard, snakePos):
         """Sets a new position for the treat.
         
         The new treat can't be on the snake.
@@ -115,9 +112,7 @@ class Treat:
         """
 
         while True:
-            randomX = abs(int((gameBoundaries[1][0] - gameBoundaries[0][0])*rand.random()))
-            randomY = abs(int((gameBoundaries[1][1] - gameBoundaries[0][1])*rand.random()))
-            self.position = [randomX, randomY]
+            self.position = gameBoard.randomPosition()
             if self.position not in snakePos:
                 break
 

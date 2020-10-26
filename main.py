@@ -17,7 +17,7 @@ snakeStartingPoint = [abs(int((gameBoundaries[1][0]-gameBoundaries[0][0])/2)),\
 snek = go.Snek(snakeStartingLength, snakeStartingPoint)
 
 #Initializing Treat
-treat = go.Treat(gameBoundaries, snek.position)
+treat = go.Treat(ecran, snek.position)
 
 
 #Begining of the grand Master Loop !
@@ -31,18 +31,18 @@ while not stop :
 
     if ecran.state == "game":
         #Updating game objects
-        snek.update(key_stroke, gameBoundaries)
+        snek.update(key_stroke, ecran)
         treat.update(snek.position)
         if treat.dead:
             score += 1
-            treat.reset(gameBoundaries, snek.position)
+            treat.reset(ecran, snek.position)
             snek.grow()
 
     elif ecran.state in ["startingScreen", "gameOver"] and key_stroke=="OK":
         #Begining a new game
         del snek, treat
         snek = go.Snek(snakeStartingLength, snakeStartingPoint)
-        treat = go.Treat(gameBoundaries, snek.position)
+        treat = go.Treat(ecran, snek.position)
         score = 0
         ecran.changeState("game")
 

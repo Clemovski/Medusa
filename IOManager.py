@@ -1,5 +1,6 @@
 import msvcrt   #For keyboard input
 import os   #For system('cls') to clear terminal
+import random as rand   #For randomPosition
 
 class InputManager:
     """Handles the keyboard inputs.
@@ -75,6 +76,23 @@ class OutputManager:
 
         self.largeur = abs(self.rightBoundary-self.leftBoundary)
         self.hauteur = abs(self.bottomBoundary-self.topBoundary)
+
+    def outOfBoundaries(self, x, y):
+        """Checks if point (x;y) is out of gameBoundaries.
+
+        x, y : int position of the game object within the game board.
+        """
+
+        return x<0 or x>=self.largeur\
+            or y<0 or y>=self.hauteur
+
+    def randomPosition(self):
+        """Returns a random [x,y] within the game board.
+        """
+        randomX = int(self.largeur*rand.random())
+        randomY = int(self.hauteur*rand.random())
+        return [randomX, randomY]
+
 
     def changeState(self, newState):
         """Changes the state of the manager with newState.
